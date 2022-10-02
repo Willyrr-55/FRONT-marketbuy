@@ -25,13 +25,16 @@
           <!-- </div> -->
 
 
-        <button class="favorite" mat-mini-fab aria-label="Example icon button with a home icon"  (click)="addProductToWishlsit(product._id)">
+        <button class="favorite" *ngIf="wishList" mat-mini-fab aria-label="Example icon button with a home icon"  (click)="addProductToWishlsit(product._id)">
             <mat-icon>favorite</mat-icon>
-          </button>
+        </button>
+        <button class="delete favorite" *ngIf="!wishList" mat-mini-fab aria-label="Example icon button with a home icon"  (click)="removetoToWishlist(product._id)">
+          <mat-icon>delete</mat-icon>
+      </button>
         <mat-card-content>
 
           <mat-card-subtitle style="cursor: pointer;">{{product.category.name}}</mat-card-subtitle>
-          <mat-card-title style="cursor: pointer;" [routerLink]="[
+          <mat-card-title style="cursor: pointer; margin-bottom: 20px;line-height: 1.7rem;" [routerLink]="[
                 '/dashboard/products/details/',
                 product._id
               ]">{{product.name}}</mat-card-title>

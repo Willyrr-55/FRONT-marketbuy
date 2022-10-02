@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductI } from 'src/app/interfaces/product.interface';
 import { AlertsService } from 'src/app/services/alerts.service';
@@ -13,6 +13,8 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 export class CardProductComponent implements OnInit {
 
   @Input() product:ProductI;
+  @Input() wishList:Boolean = true;
+  @Output() getWishList:EventEmitter<boolean>= new EventEmitter<boolean>(false);
 
   constructor(
     private cartService: CartService,
@@ -32,6 +34,19 @@ export class CardProductComponent implements OnInit {
       },error:(e:any)=>{
           this.alertsService.toastMixin(e.error.message,'error');
       }});
+  }
+
+  removetoToWishlist(productId:string){
+    console.log(productId);
+    this.wishlistService.removeToWishlist(productId)
+      .subscribe({
+        next:(res:any)=>{
+          this.getWishList.emit(true);
+          this.alertsService.toastMixin(res.message,'success');
+        },error:(e:any)=>{
+          console.log(e)
+        }
+      })
   }
 
   detail(_id:string){

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
+import { Router } from '@angular/router';
 import {
   ICreateOrderRequest,
   IPayPalConfig,
@@ -8,6 +9,7 @@ import {
 } from 'ngx-paypal';
 import { SelectMunicipalityComponent } from 'src/app/components/select-municipality/select-municipality.component';
 import { CartModelServer } from 'src/app/interfaces/cart.interface';
+import { AlertsService } from 'src/app/services/alerts.service';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -67,6 +69,8 @@ export class CheckoutComponent implements OnInit {
     private productService: ProductService,
     private SharedService: SharedService,
     private changeDetectorRef: ChangeDetectorRef,
+    private alertsService: AlertsService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.initConfig();
@@ -179,9 +183,10 @@ export class CheckoutComponent implements OnInit {
     console.log(value)
     console.log(object)
 
-    this.productService.registerorder({...this.SharedService.infoOrder, products: this.productosInCar}).subscribe(
+    this.productService.registerorder({...value, products: this.productosInCar}).subscribe(
       {next:(res:any)=>{
-
+        this.alertsService.toastMixin(res.message, 'success');
+        this.router.navigateByUrl('/')
       },
       error:(e)=>{
         this.stepper.next();

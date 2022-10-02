@@ -3,7 +3,7 @@
     width: 100%;
     max-width: 1000px;
 
-    margin: 0 auto;
+    margin: 3rem auto;
   "
   ><mat-stepper [linear]="isLinear" #stepper>
     <mat-step [stepControl]="firstFormGroup">
@@ -31,30 +31,51 @@
             <mat-label>Información adicional</mat-label>
             <textarea formControlName="aditional_info" matInput></textarea>
           </mat-form-field>
-          <mat-form-field style="margin-right: 20px" appearance="fill">
-            <mat-label>Departamento</mat-label>
-            <mat-select formControlName="department">
+          <!-- <mat-form-field style="margin-right: 20px" appearance="fill"> -->
+            <div style="display: flex;">
+                  <div style="width: 20rem; margin-right: 1rem;">
+                      <mat-label>Departamento</mat-label>
+                      <app-select-department
+                      [departmentSelected]="departmentSelected"
+                      (changeDepartmentObject)="filterMunicipalities($event)"
+                      [formGroup]="firstFormGroup"
+                      [formControlNameDepartment]="'department'"
+                      ></app-select-department>
+                    </div>
+                    <div style="width: 20rem;">
+                      <mat-label>Municipio</mat-label>
+                      <app-select-municipality
+                          [department]="departmentSelected"
+                          [municipalitySelected]="municipalitySelected"
+                          [formGroup]="firstFormGroup"
+                          [showPrice]="false"
+                          [formControlNameMunicipality]="'municipality'"
+                      ></app-select-municipality>
+                    </div>
+            </div>
+
+
+
+
+            <!-- <mat-select formControlName="department">
               <mat-option value="one">First option</mat-option>
               <mat-option value="two">Second option</mat-option>
-            </mat-select>
-          </mat-form-field>
+            </mat-select> -->
 
-          <mat-form-field style="margin-right: 20px" appearance="fill">
-            <mat-label>Municipio</mat-label>
 
-            <!-- <app-select-municipality
-                [department]="departmentSelected"
-                [municipalitySelected]="municipalitySelected"
-                [formGroup]="firstFormGroup"
-                [showPrice]="false"
-                [formControlNameMunicipality]="'municipality'"
-            ></app-select-municipality> -->
+          <!-- </mat-form-field> -->
 
-            <mat-select formControlName="municipality">
+          <!-- <mat-form-field style="margin-right: 20px" appearance="fill"> -->
+
+
+
+
+            <!-- <mat-select formControlName="municipality">
               <mat-option value="one">First option</mat-option>
               <mat-option value="two">Second option</mat-option>
-            </mat-select>
-          </mat-form-field>
+            </mat-select> -->
+
+          <!-- </mat-form-field> -->
           <mat-form-field appearance="fill">
             <mat-label>Dirección</mat-label>
             <textarea formControlName="address" matInput></textarea>
@@ -112,7 +133,7 @@
   </mat-stepper></mat-card
 >
 
-<app-select-department
+<!-- <app-select-department
 [departmentSelected]="departmentSelected"
 (changeDepartmentObject)="filterMunicipalities($event)"
 [formGroup]="firstFormGroup"
@@ -125,4 +146,4 @@
 [formGroup]="firstFormGroup"
 [showPrice]="false"
 [formControlNameMunicipality]="'municipality'"
-></app-select-municipality>
+></app-select-municipality> -->
