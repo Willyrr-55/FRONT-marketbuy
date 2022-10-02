@@ -49,10 +49,10 @@ export class NewProductComponent implements OnInit {
     this.productToEdit = history.state?.category;
     if(this.productToEdit){
       this.setEditCategory();
+
     }
 
     if(this.productToEdit){
-      console.log(this.productToEdit.photos.length)
       this.setEditProduct();
       this.loading = false
     }
@@ -110,10 +110,10 @@ export class NewProductComponent implements OnInit {
       status:[true,[Validators.required]]
     });
     this.changes.detectChanges()
-    console.log('form creado', this.productForm.value)
 
     this.productForm.get('_id').disable();
     this.productFormcreate = true
+    this.loading = false;
   }
 
   setCategory(idCategory: string) {

@@ -26,6 +26,6 @@ export class WishlistService {
   }
 
   removeToWishlist(productId){
-    return this.httpClient.delete(`${baseurlapi}/removeProductToWishlist`,{params:{productId}})
+    return this.httpClient.delete(`${baseurlapi}/removeProductToWishlist/${productId}`)
   }
 }
