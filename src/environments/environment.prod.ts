@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  urlApi:'https://api-marketbuy.herokuapp.com/'
+  urlApi:'https://api-marketbuy.herokuapp.com'
 };
