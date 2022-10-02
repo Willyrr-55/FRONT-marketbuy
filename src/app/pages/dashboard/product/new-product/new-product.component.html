@@ -2,13 +2,13 @@
     <h3>{{productToEdit?'Editar':'Nuevo'}} Producto</h3>
 </div>
 
-<div class="container-for-dashboard ">
+<div class="container-for-dashboard" *ngIf="!loading">
   <form  [formGroup]="productForm" (ngSubmit)="productToEdit?editProduct():registerProduct()" >
         <div fxLayout="column" >
-            <div fxFlex="40"> 
+            <div fxFlex="40">
                 <div class="column">
                     <label for="">Imagenes de el producto</label>
-                    <span>Puede ingresar hasta 5 imagenes.</span>
+                    <span *ngIf="!productToEdit">Puede ingresar hasta 5 imagenes.</span>
                 </div>
                 <div>
                     <app-upload-files
@@ -27,28 +27,28 @@
                         class="invalid-feedback"
                     >
                         {{ getErrorMessageImgProduct() }}
-                    </div>           
+                    </div>
                 </div>
             </div>
             <div class="container-input" >
                 <div class="input-container" >
-                    <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="name" type="text" placeholder="Nombre de el producto">   
+                    <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="name" type="text" placeholder="Nombre de el producto">
                     <div *ngIf="formSubmited && productForm.get('name').invalid" class="invalid-feedback">{{getErrorMessageName()}}</div>
                     <div class="row">
                         <div class="row-element mr">
                             <label for="">Precio</label>
-                            <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="price" type="number" placeholder="Precio">   
+                            <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="price" type="number" placeholder="Precio">
                             <div *ngIf="formSubmited && productForm.get('name').invalid" class="invalid-feedback">{{getErrorMessageName()}}</div>
                         </div>
                         <div class="row-element ml">
                             <label for="">Stock</label>
-                            <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="stock" type="number" placeholder="Stock">   
+                            <input [class]="formSubmited && productForm.get('name').invalid?'is-invalid':''" formControlName="stock" type="number" placeholder="Stock">
                              <div *ngIf="formSubmited && productForm.get('name').invalid" class="invalid-feedback">{{getErrorMessageName()}}</div>
                         </div>
-                    </div>    
+                    </div>
                     <div class="row">
                         <div class="row-element mr">
-                           <app-select-category        
+                           <app-select-category
                                 [categorySelected]="idCategory"
                                 (changeCategory)="setCategory($event)"
                             >
@@ -63,7 +63,7 @@
                             </app-select-brand>
                             <div *ngIf="formSubmited && productForm.get('name').invalid" class="invalid-feedback">{{getErrorMessageName()}}</div>
                         </div>
-                    </div>    
+                    </div>
                 </div>
 
                 <div class="input-container text-area-container"  >
@@ -73,10 +73,10 @@
                     </div>
                 </div>
             </div>
-        
+
         </div>
 
-                
+
         <section class="example-section estado" *ngIf="!productToEdit">
             <div>
                 <label class="example-margin">Estado:</label>
@@ -91,10 +91,10 @@
             </div>
 
         </section>
-        
+
         <div fxLayout="row">
             <button type="submit" fxFlex="100">{{productToEdit?'Editar':'Registrar'}} producto</button>
         </div>
   </form>
- 
+
 </div>

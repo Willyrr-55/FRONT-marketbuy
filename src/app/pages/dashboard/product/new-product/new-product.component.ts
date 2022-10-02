@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { finalize } from 'rxjs';
-import { ProductI } from 'src/app/interfaces/product.interface';
+import { EditPro, ProductI } from 'src/app/interfaces/product.interface';
 import { AlertsService } from 'src/app/services/alerts.service';
 import { ProductService } from 'src/app/services/product.service';
 import Swal from 'sweetalert2';
@@ -15,14 +15,14 @@ import Swal from 'sweetalert2';
 })
 export class NewProductComponent implements OnInit {
   labelPosition: 'false' | 'true' = 'true';
-    
+
   productFormcreate: boolean = false
   productForm:FormGroup;
   formSubmited:boolean = false;
-
+  loading: boolean = true
   idCategory: string;
   idBrand: string;
-
+  product: EditPro;
   photos:File[]=[];
   previsualizacionImgUpdate: string
 
@@ -50,6 +50,13 @@ export class NewProductComponent implements OnInit {
     if(this.productToEdit){
       this.setEditCategory();
     }
+
+    if(this.productToEdit){
+      console.log(this.productToEdit.photos.length)
+      this.setEditProduct();
+      this.loading = false
+    }
+
   }
 
   getErrorMessageName(){
@@ -169,44 +176,88 @@ export class NewProductComponent implements OnInit {
 
 
   async editProduct(){
+    console.log('edit---------')
     this.formSubmited = true;
     if(this.productForm.valid){
 
       const data = this.productForm.value;
       data.status = this.productToEdit.status
 
-      this.productToEdit = {
-        _id: this.productToEdit._id,
+      this.product = {
         name: data.name,
         description: data.description,
         price: data.price,
         stock: data.stock,
-        category: data.category,
-        brand: data.brand,
+        category: data.category._id,
+        brand: data.brand._id,
         status: data.status
       }
-
+      console.log(this.product)
       await this.ngxSpinnerService.show('generalSpinner');
-      this.productService.editProduct(this.productToEdit).pipe(
+      this.productService.editPro(this.productToEdit._id, this.product).pipe(
         finalize(async()=>await this.ngxSpinnerService.hide('generalSpinner'))
       ).subscribe({
         next:(res)=>{
           this.alertsService.toastMixin(res['message'],'success');
           this.productForm.reset();
           this.formSubmited = false;
-          this.router.navigate(['/dashboard/options/category/all-category'],{replaceUrl:true})
+          this.router.navigate(['/dashboard/options/products/all-products'],{replaceUrl:true})
         },
         error:(e)=>{
+          console.log(e)
           this.alertsService.toastMixin(e['error']['message'],'error');
         }
       });
     }
   }
 
+  // async editProduct(){
+  //   this.formSubmited = true;
+  //   if(this.productForm.valid){
+
+  //     const data = this.productForm.value;
+  //     data.status = this.productToEdit.status
+
+  //     this.productToEdit = {
+  //       _id: this.productToEdit._id,
+  //       name: data.name,
+  //       description: data.description,
+  //       price: data.price,
+  //       stock: data.stock,
+  //       category: data.category,
+  //       brand: data.brand,
+  //       status: data.status
+  //     }
+
+  //     await this.ngxSpinnerService.show('generalSpinner');
+  //     this.productService.editProduct(this.productToEdit).pipe(
+  //       finalize(async()=>await this.ngxSpinnerService.hide('generalSpinner'))
+  //     ).subscribe({
+  //       next:(res)=>{
+  //         this.alertsService.toastMixin(res['message'],'success');
+  //         this.productForm.reset();
+  //         this.formSubmited = false;
+  //         this.router.navigate(['/dashboard/options/category/all-category'],{replaceUrl:true})
+  //       },
+  //       error:(e)=>{
+  //         this.alertsService.toastMixin(e['error']['message'],'error');
+  //       }
+  //     });
+  //   }
+  // }
+
   setEditCategory(){
     this.productForm.get('_id').enable();
     this.productForm.get('status').disable();
 
+    this.productForm.patchValue(this.productToEdit);
+  }
+
+  setEditProduct(){
+    this.productForm.get('_id').enable();
+    this.productForm.get('status').disable();
+    this.idBrand = this.productToEdit.brand._id
+    this.idCategory = this.productToEdit.category._id
     this.productForm.patchValue(this.productToEdit);
   }
 

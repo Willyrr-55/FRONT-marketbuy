@@ -15,6 +15,8 @@ export class CardProductComponent implements OnInit {
   @Input() product:ProductI;
   @Input() wishList:Boolean = true;
   @Output() getWishList:EventEmitter<boolean>= new EventEmitter<boolean>(false);
+  @Output() changeStatus: EventEmitter<ProductI> = new EventEmitter<ProductI>()
+  @Input() Editroducts:ProductI;
 
   constructor(
     private cartService: CartService,

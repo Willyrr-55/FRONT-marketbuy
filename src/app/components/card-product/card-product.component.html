@@ -34,18 +34,19 @@
         <mat-card-content>
 
           <mat-card-subtitle style="cursor: pointer;">{{product.category.name}}</mat-card-subtitle>
+          <span  *ngIf="Editroducts" style="cursor: pointer;" [ngClass]="product.status?'activada':'desactivada'">{{product.status?'Activado':'Desactivado'}} </span>
           <mat-card-title style="cursor: pointer; margin-bottom: 20px;line-height: 1.7rem;" [routerLink]="[
                 '/dashboard/products/details/',
                 product._id
               ]">{{product.name}}</mat-card-title>
 
           <div class="color-price">
-            <div class="color-option">
+            <!-- <div class="color-option">
               <span class="color">Color:</span>
               <div class="circles">
                 <span class="circle yellow" id="yellow"></span>
               </div>
-            </div>
+            </div> -->
             <div class="price">
               <span class="price_num">{{product.price | currency}}</span>
             </div>
@@ -54,8 +55,9 @@
 
         </mat-card-content>
         <mat-card-actions fxLayout="row wrap" style="margin-bottom: 10px !important;">
-          <button fxFlex="100%" class="buttom-card add-to-cart" mat-raised-button  (click)="addToCard(product._id)">Añadir al carrito 	<mat-icon>add_shopping_cart</mat-icon></button>
-
+          <button *ngIf="!Editroducts" fxFlex="100%" class="buttom-card add-to-cart" mat-raised-button >Añadir al carrito <mat-icon>add_shopping_cart</mat-icon></button>
+          <button *ngIf="Editroducts"  class="buttom-card add-to-cart edit" mat-raised-button [routerLink]="['/dashboard/options/products/edit-product']" [state]="{product}">Editar	</button>
+          <button *ngIf="Editroducts"  class="buttom-card add-to-cart edit" mat-raised-button (click)="changeStatus.emit(product)">{{product.status?'Desactivar':'Activar'}} </button>
           <!-- <button fxFlex="100%" class="buttom-card" mat-raised-button style="margin: 10px 0 0 0;">Ver detalle del producto</button> -->
           <!-- <a ><mat-icon>visibility</mat-icon>Ver producto</a> -->
 

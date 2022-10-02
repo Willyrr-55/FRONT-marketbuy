@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProductI } from '../interfaces/product.interface';
+import { ProducFilter, ProductI } from '../interfaces/product.interface';
 
 const baseurlapi = environment.urlApi+'/product';
 
@@ -17,6 +17,20 @@ export class ProductService {
 
   searchProducts(filters:any){
     return this.httpClient.get<any>(`${baseurlapi}/filterProducts`,{params:{...filters}});
+  }
+
+  filterProducts(product: ProducFilter){
+    if(product._id != ''){
+      console.log('con id')
+      return this.httpClient.get(`${baseurlapi}/filterProducts?_id=${product._id}&name=${product.name}&stock=${product.stock}&status=${product.status}&category=${product.category}&brand=${product.brand}`);
+    }else{
+      console.log('sin id')
+      return this.httpClient.get(`${baseurlapi}/filterProducts?name=${product.name}&stock=${product.stock}&status=${product.status}&category=${product.category}&brand=${product.brand}`);
+    }
+  }
+
+  editPro(id:string,data:ProductI){
+    return this.httpClient.put(`${baseurlapi}/updatePro?id=${id}`,data)
   }
 
   getProducts(){
@@ -49,6 +63,10 @@ export class ProductService {
 
   getDepartmentsComponent(){
     return this.httpClient.get(`https://api.cavalierlatam.com/api/order/getDepartmentsComponent`)
+  }
+
+  changeStatus( id:string, status: boolean){
+    return this.httpClient.put(`${baseurlapi}/changeStatus?id=${id}&status=${status}`, '')
   }
 
 }
