@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProducFilter, ProductI } from '../interfaces/product.interface';
+import { PhotoProductI, ProducFilter, ProductI } from '../interfaces/product.interface';
 
 const baseurlapi = environment.urlApi+'/product';
 
@@ -67,6 +67,10 @@ export class ProductService {
 
   changeStatus( id:string, status: boolean){
     return this.httpClient.put(`${baseurlapi}/changeStatus?id=${id}&status=${status}`, '')
+  }
+
+  deletePhoto(id:string,photo: PhotoProductI){
+    return this.httpClient.put(`${baseurlapi}/deletePhoto?id=${id}`, photo)
   }
 
 }

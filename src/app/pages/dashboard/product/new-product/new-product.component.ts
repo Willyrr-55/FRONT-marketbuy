@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { finalize } from 'rxjs';
-import { EditPro, ProductI } from 'src/app/interfaces/product.interface';
+import { EditPro, PhotoProductI, ProductI } from 'src/app/interfaces/product.interface';
 import { AlertsService } from 'src/app/services/alerts.service';
 import { ProductService } from 'src/app/services/product.service';
 import Swal from 'sweetalert2';
@@ -46,13 +46,10 @@ export class NewProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
-    this.productToEdit = history.state?.category;
+    this.productToEdit = history.state?.product;
+    console.log(this.productToEdit)
     if(this.productToEdit){
-      this.setEditCategory();
-
-    }
-
-    if(this.productToEdit){
+      console.log(this.productToEdit.photos.length)
       this.setEditProduct();
       this.loading = false
     }
@@ -103,17 +100,18 @@ export class NewProductComponent implements OnInit {
       _id:['',[Validators.required]],
       name:['',[Validators.required]],
       description:['',[Validators.required]],
-      price:[0,[Validators.required]],
-      stock:[0,[Validators.required]],
+      price:[null,[Validators.required]],
+      stock:[null,[Validators.required]],
       category:['',[Validators.required]],
       brand:['',[Validators.required]],
       status:[true,[Validators.required]]
     });
     this.changes.detectChanges()
+    this.loading = false
+    console.log('form creado', this.productForm.value)
 
     this.productForm.get('_id').disable();
     this.productFormcreate = true
-    this.loading = false;
   }
 
   setCategory(idCategory: string) {
@@ -254,6 +252,7 @@ export class NewProductComponent implements OnInit {
   }
 
   setEditProduct(){
+    console.log('edit')
     this.productForm.get('_id').enable();
     this.productForm.get('status').disable();
     this.idBrand = this.productToEdit.brand._id
@@ -311,4 +310,37 @@ export class NewProductComponent implements OnInit {
     }
   }
 
+  async deletePhoto(photo: PhotoProductI){
+    await Swal.fire({
+      title:'Previsualización de la imagen',
+      imageUrl: photo.url,
+      imageAlt:'Previsualización de la imagen',
+      confirmButtonText:'Continuar'
+    });
+
+    const {result} = await this.alertsService.confirmDialogWithModals('Info.','¿Desea Eliminar la imagen de el producto?','question');
+
+  if(result.isConfirmed){
+
+    await this.ngxSpinnerService.show('generalSpinner');
+
+
+    this.productService.deletePhoto(this.productToEdit._id,photo).pipe(
+      finalize(async()=>{
+        await this.ngxSpinnerService.hide('generalSpinner');
+      })
+    ).subscribe({
+      next:(res:any)=>{
+        console.log(res)
+        this.productToEdit.photos = res.product.photos;
+        this.alertsService.toastMixin(res.message,'success');
+      },
+      error:(e:any)=>{
+        this.alertsService.toastMixin(e.error.message,'error');
+      }
+    });
+  }
+  }
+
 }
+
